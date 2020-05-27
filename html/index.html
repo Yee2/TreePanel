@@ -23,71 +23,199 @@
         table, table tr th, table tr td {
             border: 1px solid #787878;
         }
+
+        .title {
+            background-color: #00acd6;
+            color: aliceblue;
+        }
+
+        .nav {
+            margin-top: 10px;
+        }
+
+        .nav > a {
+
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .nav > a.active {
+            background-color: #0d6aad;
+            color: aliceblue;
+            border-radius: 5px;
+
+        }
     </style>
 </head>
 <body>
 <div id="main">
     <button id="btn">刷新</button>
-    <table>
-        <tr>
-            <th colspan="2">内存信息</th>
-        </tr>
-        <tr>
-            <td>可用</td>
-            <td id="mem-free"></td>
-        </tr>
-        <tr>
-            <td>已用</td>
-            <td id="mem-used"></td>
-        </tr>
-        <tr>
-            <td>总数</td>
-            <td id="mem-total"></td>
-        </tr>
-    </table>
-    <table>
-        <tr>
-            <th colspan="4">磁盘信息</th>
-        </tr>
-        <tr>
-            <th>路径</th>
-            <th>已用</th>
-            <th>可用</th>
-            <th>容量</th>
-        </tr>
-        <tbody id="disk-body">
-        <tr><td colspan="4">加载中...</td></tr>
-        </tbody>
-    </table>
-    <table>
-        <tr>
-            <th colspan="3">处理器</th>
-        </tr>
-        <tr>
-            <th>名称</th>
-            <th>频率</th>
-            <th>核心数</th>
-        </tr>
-        <tbody id="cpu-body">
-        <tr><td colspan="3">加载中...</td></tr>
+    <a href="reboot.php" onclick="return confirm('你确定重启系统吗,这个过程可能需要三分钟?')">重启系统</a>
+    <div class="nav">
+        <a data-tab="mem">内存</a>
+        <a data-tab="disk">磁盘</a>
+        <a data-tab="cpu">CPU</a>
+        <a data-tab="net">网络</a>
+        <a data-tab="frp">内网穿透</a>
+        <a data-tab="network">网络配置</a>
+    </div>
+    <div class="tables">
+        <div data-tab="mem">
+            <table>
+                <tr>
+                    <th colspan="2" class="title">内存信息</th>
+                </tr>
+                <tr>
+                    <td>可用</td>
+                    <td id="mem-free"></td>
+                </tr>
+                <tr>
+                    <td>已用</td>
+                    <td id="mem-used"></td>
+                </tr>
+                <tr>
+                    <td>总数</td>
+                    <td id="mem-total"></td>
+                </tr>
+            </table>
+        </div>
+        <div data-tab="disk">
+            <table>
+                <tr>
+                    <th colspan="4" class="title">磁盘信息</th>
+                </tr>
+                <tr>
+                    <th>路径</th>
+                    <th>已用</th>
+                    <th>可用</th>
+                    <th>容量</th>
+                </tr>
+                <tbody id="disk-body">
+                <tr>
+                    <td colspan="4">加载中...</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div data-tab="cpu">
+            <table>
+                <tr>
+                    <th colspan="3" class="title">处理器</th>
+                </tr>
+                <tr>
+                    <th>名称</th>
+                    <th>频率</th>
+                    <th>核心数</th>
+                </tr>
+                <tbody id="cpu-body">
+                <tr>
+                    <td colspan="3">加载中...</td>
+                </tr>
 
-        </tbody>
-    </table>
-    <table>
-        <tr>
-            <th colspan="3">网络信息</th>
-        </tr>
-        <tr>
-            <th>设备名</th>
-            <th>硬件地址</th>
-            <th>IP地址</th>
-        </tr>
-        <tbody id="interface-body">
-        <tr><td colspan="3">加载中...</td></tr>
-        </tbody>
-    </table>
+                </tbody>
+            </table>
+        </div>
+        <div data-tab="net">
+            <table>
+                <tr>
+                    <th colspan="3" class="title">网络信息</th>
+                </tr>
+                <tr>
+                    <th>设备名</th>
+                    <th>硬件地址</th>
+                    <th>IP地址</th>
+                </tr>
+                <tbody id="interface-body">
+                <tr>
+                    <td colspan="3">加载中...</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div data-tab="frp">
+            <table>
+                <tr>
+                    <th colspan="2" class="title">frp 服务配置</th>
+                </tr>
+                <tr>
+                    <td>服务器地址：</td>
+                    <td><input id="server_address"/></td>
+                </tr>
+                <tr>
+                    <td>服务器端口</td>
+                    <td><input type="number" id="server_port"/></td>
+                </tr>
+                <tr>
+                    <td>服务器密钥</td>
+                    <td><input id="server_token"/></td>
+                </tr>
+                <tr>
+                    <th colspan="2">网站配置</th>
+                </tr>
+                <tr>
+                    <td>绑定域名</td>
+                    <td><input id="domains"/></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button onclick="load_frpc()">读取配置</button>
+                        <button onclick="save_frpc()">保存配置</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div data-tab="network">
+            <table>
+                <tr>
+                    <th colspan="2" class="title">网卡配置</th>
+                </tr>
+                <tr>
+                    <td>网卡</td>
+                    <td>
+                        <select id="if-select">
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        启用配置
+                    </td>
+                    <td>
+                        <input type="checkbox" id="network-enable">
+                    </td>
+                </tr>
+                <tr>
+                    <td>DHCP</td>
+                    <td>
+                        <input type="checkbox" id="network-dhcp">
+                    </td>
+                </tr>
+                <tr>
+                    <td>IP地址</td>
+                    <td><input id="network-ip"/></td>
+                </tr>
+                <tr>
+                    <td>网关</td>
+                    <td><input id="network-gateway"/></td>
+                </tr>
+                <tr>
+                    <td>DNS服务器</td>
+                    <td><input id="network-dns"/></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button onclick="load_interfaces()">读取配置</button>
+                        <button onclick="save_interfaces()">保存配置</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </div>
 
+<script src="comm.js"></script>
 <script>
 
     function formatBytes(bytes, decimals = 2) {
@@ -103,6 +231,22 @@
     }
 
     document.querySelector("#btn").addEventListener("click", load);
+    All(".nav>a").forEach(ele => {
+        ele.On("click", e => {
+            All(".nav>a").forEach(a => {
+                if (a === ele) {
+                    a.classList.contains("active") || a.classList.add("active");
+                } else {
+                    a.classList.contains("active") && a.classList.remove("active");
+                }
+            })
+            let tab = ele.Data("tab");
+            All(".tables>div").forEach(div => {
+                div.style.display = div.Data("tab") == tab ? "block" : "none";
+            })
+        })
+    });
+    Q("a[data-tab='mem']").click();
 
     load();
 
@@ -148,6 +292,86 @@
             })
 
     }
+</script>
+<script>
+    function load_frpc() {
+        fetch("/frpc.json")
+            .then(resp => resp.json())
+            .then(c => {
+                Q("#server_address").value = c.common.address;
+                Q("#server_port").value = c.common.port;
+                Q("#server_token").value = c.common.token;
+                Q("#domains").value = c.web.domains;
+            })
+    }
+
+    function save_frpc() {
+        fetch("/frpc.json", {
+            method: 'POST',
+            body: JSON.stringify({
+                common: {
+                    address: Q("#server_address").value,
+                    port: parseInt(Q("#server_port").value),
+                    token: Q("#server_token").value,
+                },
+                web: {
+                    domains: Q("#domains").value
+                }
+            })
+        })
+            .then(resp => resp.text())
+            .then(msg => {
+                alert(msg);
+            })
+    }
+</script>
+<script>
+    let networkConfigs = [];
+    Q("#if-select").On("input", e => {
+        let cfg = networkConfigs.find(ele => ele.Match.Name == Q("#if-select").value)
+        if (!cfg) return;
+        Q("#network-dns").value = cfg.Network.DNS;
+        Q("#network-ip").value = cfg.Network.Address;
+        Q("#network-gateway").value = cfg.Network.Gateway;
+        Q("#network-dhcp").checked = cfg.Network.DHCP == "yes";
+        Q("#network-enable").checked = !cfg.Unset;
+    });
+
+    function save_interfaces() {
+        fetch("/network.json", {
+            method: 'POST',
+            body: JSON.stringify({
+                Unset: !Q("#network-enable").checked,
+                Match: {
+                    Name: Q("#if-select").value,
+                },
+                Network: {
+                    DNS: Q("#network-dns").value,
+                    DHCP: Q("#network-dhcp").checked ? "yes" : "no",
+                    Gateway: Q("#network-gateway").value,
+                    Address: Q("#network-ip").value,
+                }
+            })
+        })
+            .then(resp => resp.text())
+            .then(msg => {
+                alert(msg);
+            })
+    }
+
+    function load_interfaces() {
+        fetch("/network.json")
+            .then(resp => resp.json())
+            .then(list => {
+                let html = "";
+                list.forEach(cfg => {
+                    html += `<option value="${cfg.Match.Name}">${cfg.Match.Name}</option>`;
+                })
+                Q("#if-select").innerHTML = html;
+                networkConfigs = list;
+            });
+    }
+
 </script>
 </body>
 </html>
